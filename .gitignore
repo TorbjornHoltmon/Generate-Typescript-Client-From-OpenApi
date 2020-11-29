@@ -1,0 +1,11 @@
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+
+node_modules
+
+Rollup-Client/src/index.ts
+
+Rollup-Client/dist

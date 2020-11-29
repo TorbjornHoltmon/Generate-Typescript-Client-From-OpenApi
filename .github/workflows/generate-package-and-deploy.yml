@@ -1,0 +1,57 @@
+name: Deploy and Build
+
+on:
+    push:
+        branches: [main]
+
+    # Allows you to run this workflow manually from the Actions tab
+    workflow_dispatch:
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                node-version: [12.x]
+
+        steps:
+            - uses: actions/checkout@master
+            # Setup .npmrc file to publish to GitHub Packages
+            - uses: actions/setup-node@v1
+              with:
+                  node-version: "12.x"
+                  registry-url: "https://npm.pkg.github.com"
+            - name: Setup .NET Core
+              uses: actions/setup-dotnet@v1
+              with:
+                  dotnet-version: 5.0.100
+
+            - uses: actions/cache@v2
+              with:
+                  path: "**/node_modules"
+                  key: ${{ runner.os }}-node-${{ hashFiles('**/package.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-node-
+
+            - name: Restore dotnet dependencies
+              working-directory: Dotnet.OpenApi.Client.Generator
+              run: dotnet restore
+
+            - name: Build typescript client
+              working-directory: Dotnet.OpenApi.Client.Generator
+              run: dotnet build
+
+            - name: Install node dependencies
+              working-directory: Rollup-Client
+              run: npm install
+
+            - name: Build npm package
+              working-directory: Rollup-Client
+              run: npm run build
+
+            - name: Publish npm package
+              working-directory: Rollup-Client
+              run: npm publish --access public
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
