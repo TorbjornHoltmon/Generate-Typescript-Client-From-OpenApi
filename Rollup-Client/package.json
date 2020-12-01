@@ -1,6 +1,6 @@
 {
     "name": "@torbjornholtmon/generated-pet-store-client",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "",
     "main": "dist/petStoreClient.js",
     "module": "dist/petStoreClient.mjs",
