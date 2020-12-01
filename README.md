@@ -1,4 +1,4 @@
-Please se my guide on:
+Please see my guide on:
 
 http://holtmon.dev/articles/generating-a-typescript-client-from-swagger-OpenApi-and-publishing-it-as-a-package
 
